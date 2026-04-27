@@ -99,6 +99,16 @@ class ElementGrounding(BaseModel):
     bbox_window_norm: BBox01
 
 
+class FocusInfo(BaseModel):
+    """Snapshot of focused application/window for ``focus_changed`` events (Wave 5)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    bundle_id: str | None = None
+    window_title: str | None = None
+    screen_hash: str | None = None
+
+
 class EventPayload(BaseModel):
     """Per-event payload. Spatial events should set pixel + normalized coords."""
 
@@ -135,6 +145,15 @@ class EventPayload(BaseModel):
     ocr_text: str | None = None
     ocr_confidence: float | None = None
     ocr_detections: list[dict[str, Any]] | None = None
+    # Wave 3: per-session frame index lets DL reconstruct order even when
+    # clocks drift; tree_hash is null until Wave 4 lands AX/UIA tree.
+    frame_index_in_session: int | None = None
+    tree_hash: str | None = None
+    # Wave 5: focus_changed boundaries — natural episode separators for DL.
+    previous_focus: FocusInfo | None = None
+    current_focus: FocusInfo | None = None
+    screen_hash_before: str | None = None
+    screen_hash_after: str | None = None
 
 
 class EventEnvelope(BaseModel):
@@ -175,6 +194,7 @@ __all__ = [
     "EventEnvelope",
     "EventPayload",
     "EventType",
+    "FocusInfo",
     "PlatformSupport",
     "unresolved_element_grounding",
 ]

@@ -7,6 +7,7 @@ from fro_shared.events_v2 import (
     EventEnvelope,
     EventPayload,
     EventType,
+    FocusInfo,
     PlatformSupport,
     unresolved_element_grounding,
 )
@@ -19,6 +20,7 @@ __all__ = [
     "EventEnvelope",
     "EventPayload",
     "EventType",
+    "FocusInfo",
     "PlatformSupport",
     "SessionMeta",
     "unresolved_element_grounding",
