@@ -19,6 +19,7 @@ class EventType(StrEnum):
     right_click = "right_click"
     double_click = "double_click"
     scroll = "scroll"
+    drag = "drag"
     key_press = "key_press"
     key_combo = "key_combo"
     typed_text = "typed_text"
@@ -154,6 +155,20 @@ class EventPayload(BaseModel):
     current_focus: FocusInfo | None = None
     screen_hash_before: str | None = None
     screen_hash_after: str | None = None
+    # v0.1.2: drag/pan envelope. start_* = mousedown coords; end_* = mouseup coords.
+    # x/y at the top remain set to start_x/start_y for replay-compat with click.
+    start_x: float | None = None
+    start_y: float | None = None
+    start_x_norm: float | None = Field(default=None, ge=0.0, le=1.0)
+    start_y_norm: float | None = Field(default=None, ge=0.0, le=1.0)
+    end_x: float | None = None
+    end_y: float | None = None
+    end_x_norm: float | None = Field(default=None, ge=0.0, le=1.0)
+    end_y_norm: float | None = Field(default=None, ge=0.0, le=1.0)
+    duration_ms: int | None = Field(default=None, ge=0)
+    # v0.1.2: Wave 6.5 mouse trail — list of {ts_ms_offset, x_px, y_px, x_norm, y_norm}.
+    # Capped client-side at 30 points (~1s @ 30Hz). Optional; null when disabled.
+    mouse_trail: list[dict[str, Any]] | None = None
 
 
 class EventEnvelope(BaseModel):

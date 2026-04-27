@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fro-shared"
-version = "0.1.1"
+version = "0.1.2"
 description = "Shared DL / session contracts for FRO (events v2, SessionMeta)"
 requires-python = ">=3.11"
 dependencies = ["pydantic>=2.6"]
