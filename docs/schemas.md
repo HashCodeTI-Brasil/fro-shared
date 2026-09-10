@@ -1,17 +1,18 @@
-# FRO shared schemas — DL training contract (Wave 0)
+<!-- @agent-touched: 2026-09-10 -->
+# FRO shared schemas — contrato de treino (Wave 0)
 
-## Event envelope v2
+## Envelope de evento v2
 
-- `schema_version: 2` and `event_type: EventType` (closed enum — no `other`).
-- **Not** used for inbound webhook HTTP payloads; `webhook_listen` / `webhook_wait` are *step mechanisms* in `fro-backend` (see `fro-workspace/.claude/contracts/event-envelope-v2-vs-webhook-payload.md`) — payload goes to `sessionData`, not to `events/` as v2 envelopes.
-- Clicks (`click`, `right_click`, `double_click`) **require** `payload.element_grounding`.
-- Spatial events carry both pixel (`x`, `y`) and window-normalized (`x_norm`, `y_norm` in [0,1]) where applicable.
+- `schema_version: 2` e `event_type: EventType` (enum fechado — sem `other`).
+- **Não** é usado para payloads HTTP de webhook: `webhook_listen`/`webhook_wait` são *mecanismos de passo* do `fro-backend`; o payload recebido vai para `sessionData` (marcado *tainted*), não para `events/` como envelope v2. O contrato desse fluxo está no `fro-backend` (`webhook_gateway/`, `services/webhook_*`).
+- Cliques (`click`, `right_click`, `double_click`) **exigem** `payload.element_grounding`.
+- Eventos espaciais carregam pixel (`x`, `y`) e normalizado à janela (`x_norm`, `y_norm` em [0,1]) quando aplicável.
 
 ## SessionMeta
 
-- `task_description` length 10–500 characters; use `(unlabeled session)` for the default unlabeled path (see migration table in sprint refinamento).
-- `dataset_eligible` is derived: not unlabeled, no `redaction_failed_any`.
+- `task_description` entre 10 e 500 caracteres; `(unlabeled session)` é o sentinela do caminho sem rótulo.
+- `dataset_eligible` é derivado: não é sem rótulo e não teve `redaction_failed_any`.
 
-## Export (forward reference — Wave 9)
+## Export (referência futura — Wave 9)
 
-JSONL trajectories use UI steps with state+action+grounding; webhook captures are not primary steps (Wave 9 + contract `event-envelope-v2-vs-webhook-payload.md`).
+Trajetórias JSONL usam passos de UI com estado + ação + grounding; capturas de webhook não são passos primários.
